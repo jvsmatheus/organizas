@@ -13,3 +13,15 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model ShoppingItem {
+  id          Int      @id @default(autoincrement())
+  name        String   @db.VarChar(255)
+  quantity    Int
+  value       Int
+  isChecked   Boolean  @default(false) @map("is_checked")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime? @updatedAt @map("updated_at")
+
+  @@map("shopping_items")
+}
