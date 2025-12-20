@@ -1,7 +1,6 @@
-import { ShoppingItemInputDto } from "@/models/dto/shopping-item/shopping-item";
-
+import { CreateShoppingListInputDto } from './api/shopping-lists/_dto/input.dto';
 export default function Home() {
-  const handleAddShoppingItem = async (item: ShoppingItemInputDto) => {
+  const handleAddShoppingItem = async (item: CreateShoppingListInputDto) => {
     if (!item) return;
     
   };

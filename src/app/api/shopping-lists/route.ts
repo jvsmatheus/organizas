@@ -1,5 +1,4 @@
 import handleErrors from "../_errors/handle-errors";
-import { mapDomainErrorToHttp } from "../_errors/map-domain-error-http-status";
 import { createShoppingListSchema } from "./_dto/input.dto";
 
 

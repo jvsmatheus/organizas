@@ -1,9 +1,8 @@
-import { DomainError } from "@/domain/models/errors/domain-error.model";
-import { mapDomainErrorToHttp } from "./map-domain-error-http-status";
 import { ErrorCode } from "@/domain/enums/error-code.enum";
-import { ValidationError } from "@/domain/models/errors/validation-error.mode";
 import { ErrorMessages } from "@/domain/enums/error-message.enum";
+import { DomainError } from "@/domain/models/errors/domain-error.model";
 import { ZodError } from "zod";
+import { mapDomainErrorToHttp } from "./map-domain-error-http-status";
 import { mapValidationErrorToHttp } from "./map-validation-error-http-status";
 
 export default function handleErrors(error: unknown) {
