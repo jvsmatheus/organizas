@@ -1,11 +1,13 @@
-import { mapErrorToHttp } from "../_errors/map-error-http-status";
-import { CreateShoppingListInputDto } from "./_dto/input.dto";
+import handleErrors from "../_errors/handle-errors";
+import { mapDomainErrorToHttp } from "../_errors/map-domain-error-http-status";
+import { createShoppingListSchema } from "./_dto/input.dto";
+
 
 // GET / POST -> api/shopping-lists
 export async function POST(request: Request) {
     try {
         // 1. Parse do body
-        const body = await request.json() as CreateShoppingListInputDto;
+        const body = createShoppingListSchema.parse(await request.json());
 
         // 2. Chamar o service (ainda não existe)
 
@@ -17,8 +19,9 @@ export async function POST(request: Request) {
             },
             { status: 201 }
         );
-    } catch (error) {
-        const httpError = mapErrorToHttp(error);
+    } catch (error: unknown) {
+        const httpError = handleErrors(error);
+        console.log(httpError)
         return Response.json(httpError.body, { status: httpError.status });
     }
 }

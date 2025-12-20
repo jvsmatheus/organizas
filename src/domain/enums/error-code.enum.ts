@@ -1,6 +1,7 @@
 export enum ErrorCode {
     // General Errors
     INTERNAL_ERROR = 'INTERNAL_ERROR',
+    VALIDATION_ERROR = 'VALIDATION_ERROR',
 
     // Shopping List Errors
     // SHOPPING_LIST_NOT_FOUND = 'SHOPPING_LIST_NOT_FOUND',

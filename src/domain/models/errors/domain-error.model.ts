@@ -1,4 +1,4 @@
-import { ErrorCode } from './error-code.model'
+import { ErrorCode } from "@/domain/enums/error-code.enum"
 
 export class DomainError extends Error {
   readonly code: ErrorCode
