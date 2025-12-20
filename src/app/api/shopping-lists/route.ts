@@ -21,7 +21,6 @@ export async function POST(request: Request) {
         );
     } catch (error: unknown) {
         const httpError = handleErrors(error);
-        console.log(httpError)
         return Response.json(httpError.body, { status: httpError.status });
     }
 }
