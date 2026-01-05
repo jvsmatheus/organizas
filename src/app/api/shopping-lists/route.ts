@@ -1,5 +1,5 @@
-import handleErrors from "../_errors/handle-errors";
-import { createShoppingListSchema } from "./_dto/input.dto";
+import handleErrors from "../../../domain/_errors/handle-errors";
+import { createShoppingListSchema } from "../../../domain/dtos/shopping-lists/input.dto";
 
 
 // GET / POST -> api/shopping-lists
@@ -9,6 +9,7 @@ export async function POST(request: Request) {
         const body = createShoppingListSchema.parse(await request.json());
 
         // 2. Chamar o service (ainda não existe)
+        console.log(body);
 
         // 3. Response de sucesso
         return Response.json(

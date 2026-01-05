@@ -1,9 +1,9 @@
 import { POST } from "@/app/api/shopping-lists/route";
-import { makePostRequest } from "../tests.helper";
 import { ErrorCode } from "@/domain/enums/error-code.enum";
 import { ErrorMessages } from "@/domain/enums/error-message.enum";
+import { makePostRequest } from "../tests.helper";
 
-describe("POST /Shopping-lists", () => {
+describe("POST /Shopping-lists | Validation", () => {
     // body vazio
     test("return 400 when body is invalid", async () => {
         const request = makePostRequest({});
@@ -18,10 +18,52 @@ describe("POST /Shopping-lists", () => {
     });
 
     // title ausente
+    test("return 400 when title is missing", async () => {
+        const request = makePostRequest({
+            marketName: "Supermarket",
+            purchaseDate: "2024-06-01T00:00:00.000Z",
+        });
+
+        const response = await POST(request);
+        const json = await response.json();
+
+        expect(response.status).toBe(400);
+        expect(json.success).toBe(false);
+        expect(json.error.code).toBe(ErrorCode.VALIDATION_ERROR);
+        expect(json.error.message).toBe(ErrorMessages.TITLE_REQUIRED);
+    });
 
     // title não é uma string
+    test("return 400 when title is not string", async () => {
+        const request = makePostRequest({
+            title: 1
+        });
+
+        const response = await POST(request);
+        const json = await response.json();
+
+        expect(response.status).toBe(400);
+        expect(json.success).toBe(false);
+        expect(json.error.code).toBe(ErrorCode.VALIDATION_ERROR);
+        expect(json.error.message).toBe(ErrorMessages.TITLE_REQUIRED);
+    });
 
     // purchaseDate é uma data
+    test("return 400 when purchaseDate is not date", async () => {
+        const request = makePostRequest({
+            title: "title",
+            marketName: "Supermarket",
+            purchaseDate: "banana",
+        });
+
+        const response = await POST(request);
+        const json = await response.json();
+
+        expect(response.status).toBe(400);
+        expect(json.success).toBe(false);
+        expect(json.error.code).toBe(ErrorCode.VALIDATION_ERROR);
+        expect(json.error.message).toBe(ErrorMessages.INTERNAL_ERROR);
+    });
 
     // body com title correto
 });
