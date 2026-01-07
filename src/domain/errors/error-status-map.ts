@@ -1,4 +1,4 @@
-import { ErrorCode } from '@/domain/enums/error-code.enum'
+import { ErrorCode } from '@/domain/errors/enums/error-code.enum'
 
 export const errorStatusMap: Record<ErrorCode, number> = {
   [ErrorCode.INTERNAL_ERROR]: 500,

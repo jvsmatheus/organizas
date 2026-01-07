@@ -1,4 +1,4 @@
-import { ErrorCode } from '@/domain/enums/error-code.enum';
+import { ErrorCode } from '@/domain/errors/enums/error-code.enum';
 import { ZodError } from 'zod';
 
 export function mapValidationErrorToHttp(error: ZodError) {

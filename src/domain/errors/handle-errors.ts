@@ -1,6 +1,6 @@
-import { ErrorCode } from "@/domain/enums/error-code.enum";
-import { ErrorMessages } from "@/domain/enums/error-message.enum";
-import { DomainError } from "@/domain/models/errors/domain-error.model";
+import { ErrorCode } from "@/domain/errors/enums/error-code.enum";
+import { ErrorMessages } from "@/domain/errors/enums/error-message.enum";
+import { DomainError } from "@/domain/errors/models/domain-error.model";
 import { ZodError } from "zod";
 import { mapDomainErrorToHttp } from "./map-domain-error-http-status";
 import { mapValidationErrorToHttp } from "./map-validation-error-http-status";

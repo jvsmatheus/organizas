@@ -1,4 +1,4 @@
-import { DomainError } from '@/domain/models/errors/domain-error.model'
+import { DomainError } from '@/domain/errors/models/domain-error.model'
 import { errorStatusMap } from './error-status-map'
 
 export function mapDomainErrorToHttp(error: DomainError) {

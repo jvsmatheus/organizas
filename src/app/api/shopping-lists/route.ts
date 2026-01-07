@@ -1,5 +1,5 @@
-import handleErrors from "../../../domain/_errors/handle-errors";
-import { createShoppingListSchema } from "../../../domain/dtos/shopping-lists/input.dto";
+import handleErrors from "../../../domain/errors/handle-errors";
+import { createShoppingListSchema } from "../../../domain/shopping-lists/dto/input.dto";
 
 
 // GET / POST -> api/shopping-lists
@@ -15,7 +15,7 @@ export async function POST(request: Request) {
         return Response.json(
             {
                 success: true,
-                data: {}
+                data: undefined
             },
             { status: 201 }
         );

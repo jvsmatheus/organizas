@@ -1,4 +1,4 @@
-import { ErrorMessages } from "@/domain/enums/error-message.enum";
+import { ErrorMessages } from "@/domain/errors/enums/error-message.enum";
 import z from "zod";
 
 export const createShoppingListSchema = z.object({
@@ -8,3 +8,10 @@ export const createShoppingListSchema = z.object({
 });
 
 export type CreateShoppingListInputDto = z.infer<typeof createShoppingListSchema>;
+
+export type CreateShoppingListOutputDto = {
+  id: string;
+  title: string;
+  marketName?: string;
+  purchaseDate?: Date;
+}; 
