@@ -1,6 +1,6 @@
 import { POST } from "@/app/api/shopping-lists/route";
-import { ErrorCode } from "@/domain/enums/error-code.enum";
-import { ErrorMessages } from "@/domain/enums/error-message.enum";
+import { ErrorCode } from "@/domain/errors/enums/error-code.enum";
+import { ErrorMessages } from "@/domain/errors/enums/error-message.enum";
 import { makePostRequest } from "../tests.helper";
 
 describe("POST /Shopping-lists | Validation", () => {
@@ -66,4 +66,18 @@ describe("POST /Shopping-lists | Validation", () => {
     });
 
     // body com title correto
+    test("return 201 when body is valid", async () => {
+        const request = makePostRequest({
+            title: "My Shopping List",
+            marketName: "Supermarket",
+            purchaseDate: "2024-06-01T00:00:00.000Z",
+        });
+
+        const response = await POST(request);
+        const json = await response.json();
+
+        expect(response.status).toBe(201);
+        expect(json.success).toBe(true);
+        expect(json.data).toBeDefined();
+    });
 });
