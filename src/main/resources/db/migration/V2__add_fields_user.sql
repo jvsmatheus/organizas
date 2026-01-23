@@ -1,0 +1,20 @@
+ALTER TABLE users
+    ADD created_at TIMESTAMP WITHOUT TIME ZONE;
+
+ALTER TABLE users
+    ADD deleted_at TIMESTAMP WITHOUT TIME ZONE;
+
+ALTER TABLE users
+    ADD is_email_verified BOOLEAN;
+
+ALTER TABLE users
+    ADD updated_at TIMESTAMP WITHOUT TIME ZONE;
+
+ALTER TABLE users
+    ALTER COLUMN is_email_verified SET NOT NULL;
+
+ALTER TABLE users
+    DROP COLUMN id;
+
+ALTER TABLE users
+    ADD id UUID NOT NULL PRIMARY KEY;
