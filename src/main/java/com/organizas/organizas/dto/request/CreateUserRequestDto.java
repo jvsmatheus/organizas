@@ -1,9 +1,17 @@
 package com.organizas.organizas.dto.request;
 
-import jakarta.validation.constraints.NotEmpty;
+import com.organizas.organizas.validation.StrongPassword.StrongPassword;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 
 public record CreateUserRequestDto(
-        @NotEmpty(message = "Nome é obrigatório") String name,
-        @NotEmpty(message = "Email é obrigatório") String email,
-        @NotEmpty(message = "Senha é obrigatório") String password
+        @NotBlank(message = "Nome é obrigatório")
+        String name,
+
+        @NotBlank(message = "E-mail é obrigatório")
+        @Email(message = "Insira um e-mail válido")
+        String email,
+
+        @StrongPassword
+        String password
 ) { }
