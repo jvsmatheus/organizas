@@ -1,7 +1,8 @@
 package com.organizas.organizas.exceptions;
 
-import com.organizas.organizas.dto.errors.ErrorResponse;
 import com.organizas.organizas.dto.errors.FieldErrorResponse;
+import com.organizas.organizas.dto.response.ResponseBase;
+import com.organizas.organizas.utils.BuildResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,15 +11,21 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.time.Instant;
 import java.util.List;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    private final BuildResponse buildResponse;
+
+    public GlobalExceptionHandler(BuildResponse buildResponse) {
+        this.buildResponse = buildResponse;
+    }
+
     // Erro de validação
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<ErrorResponse> handleValidatioException(MethodArgumentNotValidException ex, HttpServletRequest request) {
+    public ResponseEntity<ResponseBase<List<FieldErrorResponse>>> handleValidatioException(MethodArgumentNotValidException ex, HttpServletRequest request) {
         List<FieldErrorResponse> details = ex.getBindingResult()
                 .getFieldErrors()
                 .stream()
@@ -27,10 +34,10 @@ public class GlobalExceptionHandler {
                         err.getDefaultMessage()
                 )).toList();
 
-        return buildResponse(
+        return buildResponse.build(
                 HttpStatus.BAD_REQUEST,
-                "Erro interno do servidor, por favor contate o suporte.",
-                request.getRequestURI(),
+                request,
+                "Erro de validação.",
                 details
         );
     }
@@ -38,30 +45,12 @@ public class GlobalExceptionHandler {
     // Erro genérico
     @ExceptionHandler
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ResponseEntity<ErrorResponse> handleGenericException(Exception ex, HttpServletRequest request) {
-        return buildResponse(
+    public ResponseEntity<ResponseBase<Void>> handleGenericException(Exception ex, HttpServletRequest request) {
+        return buildResponse.build(
                 HttpStatus.INTERNAL_SERVER_ERROR,
+                request,
                 "Erro interno do servidor, por favor contate o suporte.",
-                request.getRequestURI(),
                 null
-        );
-    }
-
-    private ResponseEntity<ErrorResponse> buildResponse(
-            HttpStatus status,
-            String message,
-            String path,
-            List<FieldErrorResponse> details
-    ) {
-        return ResponseEntity.status(status).body(
-                new ErrorResponse(
-                        Instant.now(),
-                        status.value(),
-                        status.getReasonPhrase(),
-                        message,
-                        path,
-                        details
-                )
         );
     }
 }
