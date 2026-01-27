@@ -1,4 +1,4 @@
-package com.organizas.organizas.exceptions;
+package com.organizas.organizas.exceptions.handlers;
 
 import com.organizas.organizas.dto.response.ResponseBase;
 import com.organizas.organizas.utils.BuildResponse;
@@ -6,28 +6,30 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-@Order(99)
+@Order(1)
 @RestControllerAdvice
-public class GlobalExceptionHandler {
-
+public class SecurityExceptionHandler {
     private final BuildResponse buildResponse;
 
-    public GlobalExceptionHandler(BuildResponse buildResponse) {
+    public SecurityExceptionHandler(BuildResponse buildResponse) {
         this.buildResponse = buildResponse;
     }
 
-    // Erro genérico
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ResponseEntity<ResponseBase<Void>> handleGenericException(Exception ex, HttpServletRequest request) {
+    @ExceptionHandler({BadCredentialsException.class, UsernameNotFoundException.class})
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ResponseEntity<ResponseBase<Void>> handleBadCredentials(
+            HttpServletRequest request
+    ) {
         return buildResponse.build(
-                HttpStatus.INTERNAL_SERVER_ERROR,
+                HttpStatus.UNAUTHORIZED,
                 request,
-                "Erro interno do servidor, por favor contate o suporte.",
+                "E-mail e/ou senha inválidos.",
                 null
         );
     }

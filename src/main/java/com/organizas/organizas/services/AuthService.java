@@ -33,7 +33,7 @@ public class AuthService {
         var userDetails = (UserDetailsImpl) userDetailsService.loadUserByUsername(dto.email());
 
         if (!passwordEncoder.matches(dto.password(), userDetails.getPassword())) {
-            throw new BadCredentialsException("Invalid credentials");
+            throw new BadCredentialsException(null);
         }
 
         var token = jwtUtils.generateToken(userDetails);
