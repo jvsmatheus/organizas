@@ -4,6 +4,7 @@ import com.organizas.organizas.dto.request.CreateUserRequestDto;
 import com.organizas.organizas.dto.response.CreateUserResponseDto;
 import com.organizas.organizas.dto.response.ResponseBase;
 import com.organizas.organizas.entities.User;
+import com.organizas.organizas.exceptions.exceptions.EmailAlreadyExistsException;
 import com.organizas.organizas.repositories.UserRepository;
 import com.organizas.organizas.utils.BuildResponse;
 import jakarta.servlet.http.HttpServletRequest;
@@ -11,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.time.Instant;
 
 @Service
 public class UserService {
@@ -26,10 +29,14 @@ public class UserService {
     }
 
     public ResponseEntity<ResponseBase<CreateUserResponseDto>> createUser(CreateUserRequestDto dto, HttpServletRequest request) {
+        if (userRepository.existsByEmail(dto.email()))
+            throw new EmailAlreadyExistsException(null);
+
         var newUser = new User();
         newUser.setPassword(passwordEncoder.encode(dto.password()));
         newUser.setEmail(dto.email());
         newUser.setName(dto.name());
+        newUser.setCreatedAt(Instant.now());
 
         var savedUser = userRepository.save(newUser);
 
