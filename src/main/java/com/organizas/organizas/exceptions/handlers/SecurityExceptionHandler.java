@@ -23,7 +23,7 @@ public class SecurityExceptionHandler {
 
     @ExceptionHandler({BadCredentialsException.class, UsernameNotFoundException.class})
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public ResponseEntity<ResponseBase<Void>> handleBadCredentials(
+    public ResponseEntity<ResponseBase<Void>> handleBadCredentialsUsernameNotFound(
             HttpServletRequest request
     ) {
         return buildResponse.build(

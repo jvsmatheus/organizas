@@ -1,4 +1,4 @@
-package com.organizas.organizas.exceptions;
+package com.organizas.organizas.exceptions.handlers;
 
 import com.organizas.organizas.dto.response.ResponseBase;
 import com.organizas.organizas.utils.BuildResponse;
