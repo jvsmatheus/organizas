@@ -1,5 +1,6 @@
 package com.organizas.organizas.services;
 
+import com.organizas.organizas.dto.email.EmailDetails;
 import com.organizas.organizas.dto.request.CreateUserRequestDto;
 import com.organizas.organizas.dto.response.CreateUserResponseDto;
 import com.organizas.organizas.dto.response.ResponseBase;
@@ -21,11 +22,13 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final BuildResponse buildResponse;
+    private final EmailService emailService;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, BuildResponse buildResponse) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, BuildResponse buildResponse, EmailService emailService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.buildResponse = buildResponse;
+        this.emailService = emailService;
     }
 
     public ResponseEntity<ResponseBase<CreateUserResponseDto>> createUser(CreateUserRequestDto dto, HttpServletRequest request) {
@@ -39,6 +42,8 @@ public class UserService {
         newUser.setCreatedAt(Instant.now());
 
         var savedUser = userRepository.save(newUser);
+
+        emailService.sendMail(new EmailDetails(savedUser.getEmail(), "Confirmação de email - Organizas", "salve"));
 
         return buildResponse.build(
                 HttpStatus.CREATED,
