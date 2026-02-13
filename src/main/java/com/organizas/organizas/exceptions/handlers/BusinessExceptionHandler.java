@@ -2,6 +2,7 @@ package com.organizas.organizas.exceptions.handlers;
 
 import com.organizas.organizas.dto.response.ResponseBase;
 import com.organizas.organizas.exceptions.exceptions.EmailAlreadyExistsException;
+import com.organizas.organizas.exceptions.exceptions.UserNotFoundException;
 import com.organizas.organizas.utils.BuildResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.core.annotation.Order;
@@ -29,6 +30,19 @@ public class BusinessExceptionHandler {
                 HttpStatus.CONFLICT,
                 request,
                 "E-mail já cadastrado.",
+                null
+        );
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseEntity<ResponseBase<Void>> handleUserNotFound(
+            HttpServletRequest request
+    ) {
+        return buildResponse.build(
+                HttpStatus.NOT_FOUND,
+                request,
+                "Usuário não encontrado",
                 null
         );
     }

@@ -1,6 +1,5 @@
 package com.organizas.organizas.services;
 
-import com.organizas.organizas.dto.email.EmailDetails;
 import com.organizas.organizas.dto.request.CreateUserRequestDto;
 import com.organizas.organizas.dto.response.CreateUserResponseDto;
 import com.organizas.organizas.dto.response.ResponseBase;
@@ -8,6 +7,7 @@ import com.organizas.organizas.entities.User;
 import com.organizas.organizas.exceptions.exceptions.EmailAlreadyExistsException;
 import com.organizas.organizas.repositories.UserRepository;
 import com.organizas.organizas.utils.BuildResponse;
+import com.organizas.organizas.utils.JwtUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,12 +23,20 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final BuildResponse buildResponse;
     private final EmailService emailService;
+    private final JwtUtils jwtUtils;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, BuildResponse buildResponse, EmailService emailService) {
+
+    public UserService(UserRepository userRepository,
+                       PasswordEncoder passwordEncoder,
+                       BuildResponse buildResponse,
+                       EmailService emailService,
+                       JwtUtils jwtUtils
+    ) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.buildResponse = buildResponse;
         this.emailService = emailService;
+        this.jwtUtils = jwtUtils;
     }
 
     public ResponseEntity<ResponseBase<CreateUserResponseDto>> createUser(CreateUserRequestDto dto, HttpServletRequest request) {
@@ -43,7 +51,9 @@ public class UserService {
 
         var savedUser = userRepository.save(newUser);
 
-        emailService.sendMail(new EmailDetails(savedUser.getEmail(), "Confirmação de email - Organizas", "salve"));
+        String confirmationToken = jwtUtils.generateToken(savedUser.getId().toString());
+
+       emailService.sendConfirmationEmail(confirmationToken, savedUser.getEmail());
 
         return buildResponse.build(
                 HttpStatus.CREATED,

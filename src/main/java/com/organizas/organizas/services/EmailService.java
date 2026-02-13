@@ -10,15 +10,31 @@ import org.springframework.stereotype.Service;
 public class EmailService {
 
     private final JavaMailSender javaMailSender;
+    private final String sender;
+    private final String baseUrl;
 
-    @Value("${spring.mail.username}")
-    private String sender;
-
-    public EmailService(JavaMailSender javaMailSender) {
+    public EmailService(
+            JavaMailSender javaMailSender,
+            @Value("${spring.mail.username}") String sender,
+            @Value("${spring.application.base_url}") String baseUrl
+    ) {
         this.javaMailSender = javaMailSender;
+        this.sender = sender;
+        this.baseUrl = baseUrl;
     }
 
-    public void sendMail(EmailDetails emailDetails) {
+    public void sendConfirmationEmail(String token, String userEmail) {
+        var confirmationUrl = baseUrl.concat("/auth/verify-email?token=").concat(token);
+
+        sendMail(new EmailDetails(
+                        userEmail,
+                        "Confirmação de email - Organizas",
+                        "Clique no link para ativar sua conta: " + confirmationUrl
+                )
+        );
+    }
+
+    private void sendMail(EmailDetails emailDetails) {
         SimpleMailMessage message = new SimpleMailMessage();
 
         message.setFrom(sender);

@@ -3,7 +3,6 @@ package com.organizas.organizas.utils;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.organizas.organizas.security.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -25,12 +24,12 @@ public class JwtUtils {
         this.expirationMs = expirationMs;
     }
 
-    public String generateToken(UserDetailsImpl user) {
+    public String generateToken(String userId) {
         Instant now = Instant.now();
         Instant expiresAt = now.plusMillis(expirationMs);
 
         return JWT.create()
-                .withSubject(user.getId().toString())
+                .withSubject(userId)
                 .withIssuedAt(now)
                 .withExpiresAt(expiresAt)
                 .sign(algorithm);
