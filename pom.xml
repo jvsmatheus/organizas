@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.organizas</groupId>
 	<artifactId>organizas</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1</version>
 	<name>organizas</name>
 	<description>Demo project for Spring Boot</description>
 	<url/>
@@ -133,6 +133,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		<finalName>organizas</finalName>
 	</build>
 
 </project>
