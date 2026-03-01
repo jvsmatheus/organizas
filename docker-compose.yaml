@@ -1,0 +1,58 @@
+services:
+  app:
+    build: .
+    env_file:
+      - .env
+    depends_on:
+      postgres:
+        condition: service_healthy
+      flyway:
+        condition: service_completed_successfully
+    ports:
+      - "${HOST_APP_PORT}:8080"
+    networks:
+      - organizas_network
+  postgres:
+    image: postgres:16-alpine
+    container_name: organizas_database
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - "${HOST_DB_PORT}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/data
+    networks:
+      - organizas_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  flyway:
+    image: flyway/flyway:10-alpine
+    container_name: organizas_migrations
+    environment:
+      FLYWAY_URL: ${DB_URL}
+      FLYWAY_USER: ${POSTGRES_USER}
+      FLYWAY_PASSWORD: ${POSTGRES_PASSWORD}
+      FLYWAY_CONNECT_RETRIES: 60
+    command: migrate
+    volumes:
+      - ./src/main/resources/db/migration:/flyway/sql
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - organizas_network
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  organizas_network:
+    driver: bridge
