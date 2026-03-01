@@ -1,5 +1,6 @@
 package com.organizas.organizas.controllers;
 
+import com.organizas.organizas.dto.request.ForgotPasswordRequestDto;
 import com.organizas.organizas.dto.request.LoginRequestDto;
 import com.organizas.organizas.dto.response.LoginResponseDto;
 import com.organizas.organizas.dto.response.ResponseBase;
@@ -28,5 +29,10 @@ public class AuthController {
     @GetMapping("/verify-email")
     public ResponseEntity<ResponseBase<Void>> confirmEmail(@RequestParam String token, HttpServletRequest request) {
         return authService.confirmEmail(token, request);
+    }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<ResponseBase<Void>> forgotPassword(@Valid @RequestBody ForgotPasswordRequestDto forgotPasswordRequestDto, HttpServletRequest request) {
+        return authService.forgotPassword(forgotPasswordRequestDto, request);
     }
 }

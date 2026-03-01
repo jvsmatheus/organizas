@@ -8,6 +8,8 @@ services:
         condition: service_healthy
       flyway:
         condition: service_completed_successfully
+    volumes:
+      - maven-cache:/root/.m2
     ports:
       - "${HOST_APP_PORT}:8080"
     networks:
@@ -52,6 +54,7 @@ services:
 volumes:
   postgres_data:
     driver: local
+  maven-cache:
 
 networks:
   organizas_network:
