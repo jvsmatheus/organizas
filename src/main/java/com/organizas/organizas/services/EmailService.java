@@ -34,6 +34,17 @@ public class EmailService {
         );
     }
 
+    public void sendForgotPasswordEmail(String token, String userEmail) {
+        var confirmationUrl = baseUrl.concat("/auth/reset-password?token=").concat(token);
+
+        sendMail(new EmailDetails(
+                        userEmail,
+                        "Redefinição de senha - Organizas",
+                        "Clique no link para redefinir sua senha: " + confirmationUrl
+                )
+        );
+    }
+
     private void sendMail(EmailDetails emailDetails) {
         SimpleMailMessage message = new SimpleMailMessage();
 

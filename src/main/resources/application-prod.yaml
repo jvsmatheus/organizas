@@ -1,0 +1,37 @@
+spring:
+  config:
+    import:
+      optional:
+        file: .env[.properties]
+  application:
+    name: organizas
+    base_url: ${BASE_URL}
+  auth:
+    secret_key: ${SECRET_KEY}
+    expiration_date: ${EXPIRATION_DATE}
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    generate-ddl: true
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+    url: ${DB_URL}
+  flyway:
+    enabled: false
+  mail:
+    host: ${MAILTRAP_HOST}
+    port: ${MAILTRAP_PORT}
+    username: ${MAILTRAP_USERNAME}
+    password: ${MAILTRAP_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true

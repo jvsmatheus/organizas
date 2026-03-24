@@ -2,6 +2,7 @@ package com.organizas.organizas.exceptions.handlers;
 
 import com.organizas.organizas.dto.response.ResponseBase;
 import com.organizas.organizas.exceptions.exceptions.EmailAlreadyExistsException;
+import com.organizas.organizas.exceptions.exceptions.InvalidTokenException;
 import com.organizas.organizas.exceptions.exceptions.UserNotFoundException;
 import com.organizas.organizas.utils.BuildResponse;
 import jakarta.servlet.http.HttpServletRequest;
@@ -43,6 +44,17 @@ public class BusinessExceptionHandler {
                 HttpStatus.NOT_FOUND,
                 request,
                 "Usuário não encontrado",
+                null
+        );
+    }
+
+    @ExceptionHandler(InvalidTokenException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<ResponseBase<Void>> handleInvalidTokenException(HttpServletRequest request) {
+        return buildResponse.build(
+                HttpStatus.BAD_REQUEST,
+                request,
+                "Token inválido ou expirado",
                 null
         );
     }

@@ -1,33 +1,32 @@
 services:
   postgres:
     image: postgres:16-alpine
-    container_name: organizas_database
+    container_name: organizas_database_dev
     env_file:
       - .env
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      PGDATA: /var/lib/postgresql/data/pgdata
     ports:
       - "${HOST_DB_PORT}:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data/data
+      - postgres_dev_data:/var/lib/postgresql/data
     networks:
       - organizas_network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}" ]
       interval: 10s
       timeout: 5s
       retries: 5
 
   flyway:
     image: flyway/flyway:10-alpine
-    container_name: organizas_migrations
+    container_name: organizas_migrations_dev
     env_file:
       - .env
     environment:
-      FLYWAY_URL: ${DB_URL}
+      FLYWAY_URL: jdbc:postgresql://postgres:5432/organizas
       FLYWAY_USER: ${POSTGRES_USER}
       FLYWAY_PASSWORD: ${POSTGRES_PASSWORD}
       FLYWAY_CONNECT_RETRIES: 60
@@ -41,7 +40,7 @@ services:
       - organizas_network
 
 volumes:
-  postgres_data:
+  postgres_dev_data:
     driver: local
 
 networks:
