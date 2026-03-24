@@ -2,10 +2,12 @@ package com.organizas.organizas.services;
 
 import com.organizas.organizas.dto.request.ForgotPasswordRequestDto;
 import com.organizas.organizas.dto.request.LoginRequestDto;
+import com.organizas.organizas.dto.request.ResetPasswordRequestDto;
 import com.organizas.organizas.dto.response.LoginResponseDto;
 import com.organizas.organizas.dto.response.ResponseBase;
 import com.organizas.organizas.entities.User;
 import com.organizas.organizas.entities.VerificationToken;
+import com.organizas.organizas.exceptions.exceptions.InvalidTokenException;
 import com.organizas.organizas.exceptions.exceptions.UserNotFoundException;
 import com.organizas.organizas.repositories.UserRepository;
 import com.organizas.organizas.repositories.VerificationTokenRepository;
@@ -21,7 +23,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
@@ -66,6 +67,7 @@ public class AuthService {
 
     public ResponseEntity<ResponseBase<Void>> confirmEmail(String token, HttpServletRequest request) {
         Optional<UUID> userId = jwtUtils.validateToken(token);
+
         User user = userId
                 .flatMap(userRepository::findById)
                         .orElseThrow(() -> new UserNotFoundException(null));
@@ -76,7 +78,7 @@ public class AuthService {
         return buildResponse.build(
                 HttpStatus.OK,
                 request,
-                null,
+                "E-mail confirmado com sucesso",
                 null
         );
     }
@@ -100,6 +102,34 @@ public class AuthService {
                 HttpStatus.OK,
                 request,
                 "Se o email existir, enviaremos instruções.",
+                null
+        );
+    }
+
+    public ResponseEntity<ResponseBase<Void>> resetPassword(ResetPasswordRequestDto resetPasswordRequestDto, String token, HttpServletRequest request) {
+        Optional<UUID> userId = jwtUtils.validateToken(token);
+
+        if (userId.isEmpty()) {
+            throw new InvalidTokenException(null);
+        }
+
+        VerificationToken verificationToken = verificationTokenRepository.findByToken(token)
+                .orElseThrow(() -> new InvalidTokenException(null));
+
+        if (verificationToken.getExpiresAt().before(new Date())) {
+            throw new InvalidTokenException(null);
+        }
+
+        User user = verificationToken.getUser();
+        user.setPassword(passwordEncoder.encode(resetPasswordRequestDto.newPassword()));
+        userRepository.save(user);
+
+        verificationTokenRepository.delete(verificationToken);
+
+        return buildResponse.build(
+                HttpStatus.OK,
+                request,
+                "Senha redefinida com sucesso",
                 null
         );
     }
