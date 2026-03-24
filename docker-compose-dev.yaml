@@ -26,7 +26,7 @@ services:
     env_file:
       - .env
     environment:
-      FLYWAY_URL: ${DB_URL}
+      FLYWAY_URL: jdbc:postgresql://postgres:5432/organizas
       FLYWAY_USER: ${POSTGRES_USER}
       FLYWAY_PASSWORD: ${POSTGRES_PASSWORD}
       FLYWAY_CONNECT_RETRIES: 60
